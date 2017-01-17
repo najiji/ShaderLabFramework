@@ -12,6 +12,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} /usr/local/opt/qt5/lib/cmake)
 
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)
@@ -25,27 +26,27 @@ set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_RELEASE} -fprofile-arcs -ftest-c
 # used in the COVERAGE CMake configuration.
 set_target_properties(Qt5::Core PROPERTIES MAP_IMPORTED_CONFIG_COVERAGE "RELEASE")
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR} 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}
 					${CMAKE_CURRENT_SOURCE_DIR}/qt
 					${CMAKE_CURRENT_SOURCE_DIR}/opengl
-					${CMAKE_CURRENT_BINARY_DIR} 
-					${CMAKE_BINARY_DIR} 
+					${CMAKE_CURRENT_BINARY_DIR}
+					${CMAKE_BINARY_DIR}
 					${GLEW_INCLUDE_DIRS})
-			
 
-				
-set(SRCS  main.cpp 
-    opengl/camera.cpp 
-    opengl/framebuffer.cpp 
-    opengl/light.cpp 
-    opengl/material.cpp 
-    opengl/mesh.cpp 
-    opengl/object.cpp 
-    opengl/scene.cpp 
-    opengl/texture.cpp 
-    qt/gldisplay.cpp 
-    qt/mainwindow.cpp 
-    qt/MatricesWidget.cpp 
+
+
+set(SRCS  main.cpp
+    opengl/camera.cpp
+    opengl/framebuffer.cpp
+    opengl/light.cpp
+    opengl/material.cpp
+    opengl/mesh.cpp
+    opengl/object.cpp
+    opengl/scene.cpp
+    opengl/texture.cpp
+    qt/gldisplay.cpp
+    qt/mainwindow.cpp
+    qt/MatricesWidget.cpp
     qt/Matrix4x4Widget.cpp
 	qt/GLSLCodeEditor.cpp
 	qt/SyntaxHighlighterGLSL.cpp
@@ -57,19 +58,19 @@ set(SRCS  main.cpp
 	qt/texturewidget.cpp
 	qt/materialEditorWidget.cpp
 	)
-			
-set(HDRS opengl/camera.h 
-    opengl/framebuffer.h 
-    opengl/light.h 
-    opengl/material.h 
-    opengl/mesh.h 
-    opengl/object.h 
-    opengl/openglheaders.h 
-    opengl/scene.h 
-    opengl/texture.h 
-    qt/gldisplay.h 
-    qt/mainwindow.h 
-    qt/MatricesWidget.h 
+
+set(HDRS opengl/camera.h
+    opengl/framebuffer.h
+    opengl/light.h
+    opengl/material.h
+    opengl/mesh.h
+    opengl/object.h
+    opengl/openglheaders.h
+    opengl/scene.h
+    opengl/texture.h
+    qt/gldisplay.h
+    qt/mainwindow.h
+    qt/MatricesWidget.h
     qt/Matrix4x4Widget.h
 	qt/GLSLCodeEditor.h
 	qt/codeeditor.h
@@ -82,10 +83,10 @@ set(HDRS opengl/camera.h
 	qt/texturewidget.h
 	qt/materialEditorWidget.h
 	)
-	
-set(FORMS 
-	qt/mainwindow.ui 
-    qt/MatricesWidget.ui 
+
+set(FORMS
+	qt/mainwindow.ui
+    qt/MatricesWidget.ui
     qt/Matrix4x4Widget.ui
 	qt/GLSLEditorWindow.ui
 	qt/GLSLEditorWidget.ui
@@ -94,7 +95,7 @@ set(FORMS
 	qt/materialEditorWidget.ui
 	qt/ressources.qrc)
 
-set(RCS src/images/images.qrc )	
+set(RCS src/images/images.qrc )
 
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 

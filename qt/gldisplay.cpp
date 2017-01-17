@@ -95,6 +95,7 @@ void GLDisplay::initializeGL()
     shaderEditor->show();
 
     //Initialisation of GLEW
+#ifndef __APPLE__
     GLenum glewError = glewInit();
 
     if (glewError != GLEW_OK)
@@ -102,6 +103,7 @@ void GLDisplay::initializeGL()
         QString error = QString("Error in GLEW initialisation\n\n");
         updateLog(error);
     }
+#endif
 
     m_scene = new Scene(string("teapot")); //Initialise with the teapot
 

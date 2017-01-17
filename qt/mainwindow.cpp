@@ -38,7 +38,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->setupUi(this);
     //Enable multisampling
     QGLFormat format = ui->m_GLWidget->format();
-    format.setSamples(16);
+
+#ifdef __APPLE__
+    format.setVersion(4, 0);
+    format.setProfile( QGLFormat::CoreProfile );
+#endif
+
     ui->m_GLWidget->setFormat(format);
 
     this->resize(QDesktopWidget().availableGeometry(this).size().width() * 0.5,
@@ -133,4 +138,3 @@ void MainWindow::updateMaterialTab()
     }
 
 }
-
