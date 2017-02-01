@@ -32,7 +32,13 @@
 
 using namespace std;
 
-GLDisplay::GLDisplay(QWidget *parent) : QGLWidget(QGLFormat(), parent),
+QGLFormat setVersion(QGLFormat format) {
+    format.setVersion(2,1);
+    format.setProfile(QGLFormat::CompatibilityProfile);
+    return format;
+}
+
+GLDisplay::GLDisplay(QWidget *parent) : QGLWidget(setVersion(QGLFormat()), parent),
 m_cameraScene(Camera()), m_cameraQuad(Camera()),
 m_mousePos(0, 0),
 m_lastFPSUpdate(0), m_frameCounter(0), m_FPS(0),
@@ -47,7 +53,7 @@ m_wireframe(false), m_backFaceCulling(false), m_renderCoordinateFrame(false)
 }
 
 
-GLDisplay::GLDisplay(const QGLFormat& glFormat, QWidget *parent) : QGLWidget(glFormat, parent),
+GLDisplay::GLDisplay(const QGLFormat& glFormat, QWidget *parent) : QGLWidget(setVersion(glFormat), parent),
 m_cameraScene(Camera()), m_cameraQuad(Camera()),
 m_mousePos(0, 0),
 m_timeFPS(QTime()), m_lastFPSUpdate(0), m_frameCounter(0), m_FPS(0),
@@ -183,7 +189,7 @@ void GLDisplay::paintGL()
     //use the simplified pipeline for better speed
     this->renderToTexture(m_framebufferFinalResult.getColorBufferID(0), true);
 
-    this->drawFPS();
+  //  this->drawFPS();
 }
 
 void GLDisplay::setOpenGLWireframeState(bool activateWireframeMode)
