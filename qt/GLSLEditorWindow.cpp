@@ -35,6 +35,7 @@
 #include <QDesktopWidget>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLWidget>
+#include <QShortcut>
 
 GLSLEditorWindow::GLSLEditorWindow(QOpenGLShaderProgram* sProgram, QOpenGLShaderProgram* dsProgram, QWidget *parent) :
     QMainWindow(parent), ui(new Ui::GLSLEditorWindow)
@@ -47,6 +48,7 @@ GLSLEditorWindow::GLSLEditorWindow(QOpenGLShaderProgram* sProgram, QOpenGLShader
     readSettings();
 
     setupTabs();
+    
     connect(ui->actionSave_pipeline, SIGNAL(triggered()), this, SLOT(savePipelineAction()));
     connect(ui->actionSave_pipeline_As, SIGNAL(triggered()), this, SLOT(savePipelineAsAction()));
     connect(ui->actionLoad_pipeline, SIGNAL(triggered()), this, SLOT(loadPipeline()));
@@ -55,6 +57,8 @@ GLSLEditorWindow::GLSLEditorWindow(QOpenGLShaderProgram* sProgram, QOpenGLShader
     connect(ui->actionSave_As_, SIGNAL(triggered()), this, SLOT(saveAs()));
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
     connect(ui->actionExit_Ctrl_X, SIGNAL(triggered()), this, SLOT(exitApplicationAction()));
+    
+    new QShortcut(QKeySequence(Qt::Key_F3), this, SLOT(savePipelineAction()));
 
     //connect(textEdit->document(), &QTextDocument::contentsChanged,
     //	this, &MainWindow::documentWasModified);
@@ -141,6 +145,14 @@ uniform mat3 normalMatrix; //mv matrix without translation\n\
 \n\
 uniform vec4 lightPosition_camSpace; //light Position in camera space\n\
 \n\
+uniform vec4 ambient;\n\
+uniform vec4 diffuse;\n\
+uniform vec4 specular;\n\
+uniform float shininess;\n\
+uniform float ambientCoefficent;\n\
+uniform float diffuseCoefficent;\n\
+uniform float specularCoefficent;\n\
+\n\
 in vec4 vertex_worldSpace;\n\
 in vec3 normal_worldSpace;\n\
 in vec2 textureCoordinate_input;\n\
@@ -151,24 +163,24 @@ out data\n\
   vec3 normal_camSpace;\n\
   vec2 textureCoordinate;\n\
   vec4 color;\n\
-}vertexIn;\n\
+}vertexInOut;\n\
 \n\
 //Vertex shader compute the vectors per vertex\n\
 void main(void)\n\
 {\n\
   //Put the vertex in the correct coordinate system by applying the model view matrix\n\
   vec4 vertex_camSpace = mvMatrix*vertex_worldSpace; \n\
-  vertexIn.position_camSpace = vertex_camSpace;\n\
+  vertexInOut.position_camSpace = vertex_camSpace;\n\
   \n\
   //Apply the model-view transformation to the normal (only rotation, no translation)\n\
   //Normals put in the camera space\n\
-  vertexIn.normal_camSpace = normalize(normalMatrix*normal_worldSpace);\n\
+  vertexInOut.normal_camSpace = normalize(normalMatrix*normal_worldSpace);\n\
   \n\
   //Color chosen as red\n\
-  vertexIn.color = vec4(1.0, 0.0, 0.0, 1.0);\n\
+  vertexInOut.color = vec4(1.0, 0.0, 0.0, 1.0);\n\
   \n\
   //Texture coordinate\n\
-  vertexIn.textureCoordinate = textureCoordinate_input;\n\
+  vertexInOut.textureCoordinate = textureCoordinate_input;\n\
   \n\
   gl_Position = pMatrix * vertex_camSpace;\n\
 }");
@@ -214,6 +226,9 @@ uniform vec4 ambient;\n\
 uniform vec4 diffuse;\n\
 uniform vec4 specular;\n\
 uniform float shininess;\n\
+uniform float ambientCoefficent;\n\
+uniform float diffuseCoefficent;\n\
+uniform float specularCoefficent;\n\
 \n\
 uniform vec4 lightPosition_camSpace; //light Position in camera space\n\
 \n\
@@ -405,7 +420,7 @@ bool GLSLEditorWindow::savePipelineAction()
 
 }
 
-bool GLSLEditorWindow::savePipeline(const QString& fileName)
+bool GLSLEditorWindow::savePipeline(QString& fileName)
 {
     GLSLEditorWidget* vertexEditor = static_cast<GLSLEditorWidget*>(ui->EditorTabWidget->widget(0));
     GLSLEditorWidget* geomEditor = static_cast<GLSLEditorWidget*>(ui->EditorTabWidget->widget(1));
@@ -413,6 +428,15 @@ bool GLSLEditorWindow::savePipeline(const QString& fileName)
     GLSLEditorWidget* R2TVertEditor = static_cast<GLSLEditorWidget*>(ui->EditorTabWidget->widget(3));
     GLSLEditorWidget* T2TFragEditor = static_cast<GLSLEditorWidget*>(ui->EditorTabWidget->widget(4));
 
+    // Make sure the fileName has the correct extension
+    if (!fileName.endsWith(QString(".xml"))) {
+        fileName.append(QString(".xml"));
+    }
+    
+    QString text = QString("Saving pipeline to %1").arg(fileName);
+    emit updateLog(text);
+    emit displayLog();
+    
     if (fileName.isEmpty())
     {
         pipelineFileName = QFileDialog::getSaveFileName(this,
@@ -490,7 +514,7 @@ bool GLSLEditorWindow::savePipeline(const QString& fileName)
 bool GLSLEditorWindow::loadPipeline()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
-        tr("Save Pipeline"), "",
+        tr("Load Pipeline"), "",
         tr("XML file (*.xml);; All Files (*)"));
 
     if (!fileName.isEmpty())
@@ -538,6 +562,7 @@ bool GLSLEditorWindow::loadPipeline()
         //Close the document
         xmlDocument.close();
     }
+    pipelineFileName = fileName;
     return true;
 }
 
