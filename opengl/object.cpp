@@ -117,7 +117,7 @@ string Object::loadPath(string &objectName)
 #endif
 
 #if defined(__APPLE__) && defined(__MACH__)
-        objectPath = QDir::currentPath().toStdString() + string("/../../../off/square.off");
+        objectPath = QDir::currentPath().toStdString() + string("/../off/square.off");
 #endif
     }
     else if (objectName == "monkey")
@@ -131,7 +131,7 @@ string Object::loadPath(string &objectName)
 #endif
 
 #if defined(__APPLE__) && defined(__MACH__)
-        objectPath = QDir::currentPath().toStdString() + string("/../../../off/monkey.off");
+        objectPath = QDir::currentPath().toStdString() + string("/../off/monkey.off");
 #endif
     }
     else if (objectName == "cube")
@@ -145,7 +145,7 @@ string Object::loadPath(string &objectName)
 #endif
 
 #if defined(__APPLE__) && defined(__MACH__)
-        objectPath = QDir::currentPath().toStdString() + string("/../../../off/cube.off");
+        objectPath = QDir::currentPath().toStdString() + string("/../off/cube.off");
 #endif
     }
     else if (objectName == "teapot")
@@ -159,7 +159,7 @@ string Object::loadPath(string &objectName)
 #endif
 
 #if defined(__APPLE__) && defined(__MACH__)
-        objectPath = QDir::currentPath().toStdString() + string("/../../../obj/teapotR90.obj");
+        objectPath = QDir::currentPath().toStdString() + string("/../obj/teapotR90.obj");
 #endif
     }
     else if (objectName == "teapot-low")
@@ -173,7 +173,7 @@ string Object::loadPath(string &objectName)
 #endif
 
 #if defined(__APPLE__) && defined(__MACH__)
-        objectPath = QDir::currentPath().toStdString() + string("/../../../obj/teapot-lowR90.obj");
+        objectPath = QDir::currentPath().toStdString() + string("/../obj/teapot-lowR90.obj");
 #endif
     }
     else

@@ -74,7 +74,7 @@ void GLDisplay::initializeGL()
     OpenGLInfo += QString("\tRENDERER :    %1\n").arg((const char*)glGetString(GL_RENDERER));
     OpenGLInfo += QString("\tVERSION :      %1\n").arg((const char*)glGetString(GL_VERSION));
     OpenGLInfo += QString("\tGLSL VERSION : %1\n").arg((const char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
-
+    qDebug() << OpenGLInfo;
     emit updateGLInfo(OpenGLInfo);
 
     glEnable(GL_DEPTH_TEST);
