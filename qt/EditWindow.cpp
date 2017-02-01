@@ -698,7 +698,7 @@ uploadShaderSource
 */
 //TODO
 #if 0
-void GLSLMdiEditWindow::uploadShaderSource(IShader* shader, QGLShaderProgram* qglShader)
+void GLSLMdiEditWindow::uploadShaderSource(IShader* shader, QOpenGLShaderProgram* qglShader)
 {
     // read out all editors
     for( int i = 0 ; i < IShader::MAX_SHADER_TYPES ; i++ )

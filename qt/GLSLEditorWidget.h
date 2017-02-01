@@ -30,7 +30,7 @@
 #include <QMatrix4x4>
 #include <string>
 
-class QGLShader;
+class QOpenGLShader;
 class GLSLCodeEditor;
 
 class GLSLEditorWidget : public QWidget
@@ -38,7 +38,7 @@ class GLSLEditorWidget : public QWidget
     Q_OBJECT
 
 public:
-    GLSLEditorWidget(QGLShader* shader, QWidget *parent);
+    GLSLEditorWidget(QOpenGLShader* shader, QWidget *parent);
     ~GLSLEditorWidget();
 
     /**
@@ -50,7 +50,7 @@ public:
     QString removeQtDefines(QString sourceCode);
     void setLinkToProgram(bool val);
     bool getLinkToProgram();
-    QGLShader* getShader();
+    QOpenGLShader* getShader();
     QString getCurFileName();
     void setShaderCode(QString& text);
     QString getShaderCode();
@@ -83,7 +83,7 @@ protected:
 
 private:
     Ui::GLSLEditorWidget* ui;
-    QGLShader* m_shader;
+    QOpenGLShader* m_shader;
     GLSLCodeEditor* sEditor;
     QString currentFileName;
 };

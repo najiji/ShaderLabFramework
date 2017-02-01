@@ -35,7 +35,7 @@
 //=============================================================================
 
 // construction
-GLSLCodeEditor::GLSLCodeEditor(QGLShader::ShaderType shaderType)
+GLSLCodeEditor::GLSLCodeEditor(QOpenGLShader::ShaderType shaderType)
 {
     // member initialization
     m_shaderType = shaderType;
@@ -347,7 +347,7 @@ QString GLSLCodeEditor::fileName(void) const
 shaderType
 ========================
 */
-QGLShader::ShaderType GLSLCodeEditor::shaderType(void) const
+QOpenGLShader::ShaderType GLSLCodeEditor::shaderType(void) const
 {
     return m_shaderType;
 }

@@ -29,6 +29,7 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QSize>
+#include <QOpenGLContext>
 #include "Vector4Widget.h"
 
 using namespace std;
@@ -37,14 +38,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 {
     ui->setupUi(this);
     //Enable multisampling
-    QGLFormat format = ui->m_GLWidget->format();
-
-#ifdef __APPLE__
-    format.setVersion(4, 0);
-    format.setProfile( QGLFormat::CoreProfile );
-#endif
-
-    ui->m_GLWidget->setFormat(format);
 
     this->resize(QDesktopWidget().availableGeometry(this).size().width() * 0.5,
         QDesktopWidget().availableGeometry(this).size().height() * 0.97);
@@ -97,8 +90,8 @@ void MainWindow::updateUniformTab()
     }
     else //update widget
     {
-        ui->m_GLWidget->context()->makeCurrent();
-        ui->m_GLWidget->updateGL();
+        ui->m_GLWidget->makeCurrent();
+        ui->m_GLWidget->update();
         m_uniformEditor->updateShaderPrograms(
             ui->m_GLWidget->getShaderProgram(), ui->m_GLWidget->getShaderDisplayProgram(),
             ui->m_GLWidget->context());
@@ -131,8 +124,8 @@ void MainWindow::updateMaterialTab()
     {
         for (int k = 0; k < objectList.size(); k++)
         {
-            ui->m_GLWidget->context()->makeCurrent();
-            ui->m_GLWidget->updateGL();
+            ui->m_GLWidget->makeCurrent();
+            ui->m_GLWidget->update();
             m_materialEditors.at(k)->updateEditor(k);
         }
     }

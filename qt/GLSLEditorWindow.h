@@ -30,7 +30,7 @@
 #include "ui_GLSLEditorWindow.h"
 #include <QVector>
 #include <QMatrix4x4>
-#include <QGLShaderProgram>
+#include <QOpenGLShaderProgram>
 #include <QtXml>
 
 class GLSLCodeEditor;
@@ -40,14 +40,14 @@ class GLSLEditorWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    GLSLEditorWindow(QGLShaderProgram* sProgram, QGLShaderProgram* dsProgram, QWidget *parent);
+    GLSLEditorWindow(QOpenGLShaderProgram* sProgram, QOpenGLShaderProgram* dsProgram, QWidget *parent);
     ~GLSLEditorWindow();
 
     //TODO documentation
     void loadDefaultShaders();
     void linkShader();
-    QGLShaderProgram* getShaderProgram() { return m_shaderProgram; };
-    QGLShaderProgram* getShaderProgramDisplay() { return m_shaderProgramDisplay; };
+    QOpenGLShaderProgram* getShaderProgram() { return m_shaderProgram; };
+    QOpenGLShaderProgram* getShaderProgramDisplay() { return m_shaderProgramDisplay; };
 
     //	private slots:
 
@@ -96,8 +96,8 @@ private:
     void readSettings();
 
     Ui::GLSLEditorWindow* ui;
-    QGLShaderProgram* m_shaderProgram;
-    QGLShaderProgram* m_shaderProgramDisplay;
+    QOpenGLShaderProgram* m_shaderProgram;
+    QOpenGLShaderProgram* m_shaderProgramDisplay;
     QString pipelineFileName;
 };
 

@@ -31,7 +31,7 @@
 #include "ui_uniformEditorWidget.h"
 #include <QVector>
 #include <QMatrix4x4>
-#include <QGLShaderProgram>
+#include <QOpenGLShaderProgram>
 
 //class QGLContext;
 //class QGLFunctions;
@@ -42,8 +42,8 @@ class UniformEditorWidget : public QWidget
     Q_OBJECT
 
 public:
-    UniformEditorWidget(QGLShaderProgram* sProgram, QGLShaderProgram* dsProgram,
-        QGLContext* glContext, QWidget *parent);
+    UniformEditorWidget(QOpenGLShaderProgram* sProgram, QOpenGLShaderProgram* dsProgram,
+        QOpenGLContext* glContext, QWidget *parent);
     ~UniformEditorWidget();
 
     //enum uniformType { BOOL, INT, UINT, FLOAT, DOUBLE, VEC2, VEC3, VEC4, MAT3, MAT4, SAMPLER};
@@ -53,7 +53,7 @@ public:
         QString name;
     };
 
-    void updateShaderPrograms(QGLShaderProgram* sProgram, QGLShaderProgram* dsProgram, QGLContext* glContext);
+    void updateShaderPrograms(QOpenGLShaderProgram* sProgram, QOpenGLShaderProgram* dsProgram, QOpenGLContext* glContext);
 
     //TODO documentation
 
@@ -118,11 +118,11 @@ private:
     QList<mUniform> parseUniformsFromSource(QString sourceCode);
 
     Ui::UniformEditorWidget* ui;
-    QGLShaderProgram* m_shaderProgram;
-    QGLShaderProgram* m_shaderProgramDisplay;
+    QOpenGLShaderProgram* m_shaderProgram;
+    QOpenGLShaderProgram* m_shaderProgramDisplay;
     QList<mUniform> m_shaderProgramUserUniforms; //List of uniforms in the shader program
     QList<mUniform> m_displayShaderUserUniforms; //List of uniforms in the display shader program
-    QGLContext* m_glContext;
+    QOpenGLContext* m_glContext;
 };
 
 #endif
