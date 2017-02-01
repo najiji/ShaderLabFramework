@@ -22,7 +22,7 @@
 //=============================================================================
 
 // construction
-CEditor::CEditor( /*IShader* shader,*/ QGLShaderProgram* renderToTextureShaderProgram)
+CEditor::CEditor( /*IShader* shader,*/ QOpenGLShaderProgram* renderToTextureShaderProgram)
 {
     //m_shader = shader;
     m_renderToTextureShaderProgram = renderToTextureShaderProgram;

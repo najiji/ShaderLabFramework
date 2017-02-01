@@ -36,7 +36,7 @@ public:
 	/** Constructor.
 	 * @param shader IShader object this editor is bound to.
 	 */
-    CEditor( /*IShader* shader,*/ QGLShaderProgram* renderToTextureShaderProgram);
+    CEditor( /*IShader* shader,*/ QOpenGLShaderProgram* renderToTextureShaderProgram);
 
     virtual ~CEditor( void ); ///< Destruction.
 
@@ -97,7 +97,7 @@ private:
 
 	// the shader object
 	//IShader* m_shader;
-    QGLShaderProgram* m_renderToTextureShaderProgram;
+    QOpenGLShaderProgram* m_renderToTextureShaderProgram;
 
 	// Wether the editor is in MDI mode.
 	// The initial state is true.

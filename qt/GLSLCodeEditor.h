@@ -34,6 +34,7 @@
 #include <QSyntaxHighlighter>
 #include <QTextEdit>
 #include <QGLShader>
+#include <QOpenGLShader>
 #include "codeeditor.h"
 
 //TODO move to config
@@ -97,7 +98,7 @@ public:
     * like filters in open/save dialogs.
     * @param shaderType Shader type from IShader.
     */
-    GLSLCodeEditor(QGLShader::ShaderType shaderType);
+    GLSLCodeEditor(QOpenGLShader::ShaderType shaderType);
 
     /** Load the initial source code for the assigned shader type.
     * The source code loaded is based on the shaderType argument passed to the constructor.
@@ -106,7 +107,7 @@ public:
 
     /** Returns the shader type assigned to this source editor.
     */
-    QGLShader::ShaderType shaderType(void) const;
+    QOpenGLShader::ShaderType shaderType(void) const;
 
     /** Clears the content to an empty string.
     * Pops up a 'save changes' dialog if necessary.
@@ -172,7 +173,7 @@ private:
     void createSyntaxHighlighter(void);
     QSyntaxHighlighter* m_highlighter;
 
-    QGLShader::ShaderType m_shaderType;
+    QOpenGLShader::ShaderType m_shaderType;
     QString	m_fileName; // empty string == untitled document
 };
 

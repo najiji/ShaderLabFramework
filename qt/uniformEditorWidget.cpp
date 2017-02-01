@@ -33,9 +33,11 @@
 #include "Matrix4x4Widget.h"
 #include <QOpenGLContext>
 #include <QGLFunctions>
+#include <QOpenGLShaderProgram>
+#include <QGLShaderProgram>
 
-UniformEditorWidget::UniformEditorWidget(QGLShaderProgram* sProgram, QGLShaderProgram* dsProgram,
-    QGLContext* glContext, QWidget *parent) : QWidget(parent), ui(new Ui::UniformEditorWidget)
+UniformEditorWidget::UniformEditorWidget(QOpenGLShaderProgram* sProgram, QOpenGLShaderProgram* dsProgram,
+    QOpenGLContext* glContext, QWidget *parent) : QWidget(parent), ui(new Ui::UniformEditorWidget)
 {
     ui->setupUi(this);
     m_glContext = glContext;
@@ -59,7 +61,7 @@ UniformEditorWidget::~UniformEditorWidget()
     delete ui;
 }
 
-void UniformEditorWidget::updateShaderPrograms(QGLShaderProgram* sProgram, QGLShaderProgram* dsProgram, QGLContext* glContext)
+void UniformEditorWidget::updateShaderPrograms(QOpenGLShaderProgram* sProgram, QOpenGLShaderProgram* dsProgram, QOpenGLContext* glContext)
 {
     //qDebug() << "updateShaderPrograms";
     m_shaderProgram = sProgram;
@@ -119,7 +121,7 @@ void UniformEditorWidget::updateEditorWidget()
     //we need to parse manually
     /*
     m_glContext->makeCurrent();
-    QGLFunctions fncs(m_glContext);
+    QOpenGLFunctions fncs(m_glContext);
 
     if (m_shaderProgram->isLinked())
     {
@@ -199,7 +201,7 @@ void UniformEditorWidget::setUniformEditorWidgets(QList<mUniform> &uniformList, 
         static_cast<QGridLayout*>(ui->m_UniformEditFrame->layout())->addWidget(textLabel, 0, 0);
     }
 
-    QGLFunctions fncs(m_glContext);
+    QOpenGLFunctions fncs(m_glContext);
 
     //TODO nicify this
     if (uniformList.at(index).type == QString("bool"))

@@ -40,9 +40,9 @@
 #include "opengl/openglheaders.h"
 
 #include <QApplication>
-#include <QGLWidget>
+#include <QOpenGLWidget>
 #include <QMatrix>
-#include <QGLShaderProgram>
+#include <QOpenGLShaderProgram>
 #include <QVector>
 #include <QVector2D>
 #include <QSize>
@@ -58,18 +58,19 @@
 #include <sstream>
 #include <iostream>
 #include <QFileDialog>
+#include <QOpenGLWidget>
 
 class GLSLEditorWindow;
 
 using namespace std;
 
-class GLDisplay : public QGLWidget
+class GLDisplay : public QOpenGLWidget
 {
     Q_OBJECT
 
 public:
     GLDisplay(QWidget *parent);
-    GLDisplay(const QGLFormat& glFormat, QWidget *parent);
+    GLDisplay(const QSurfaceFormat& glFormat, QWidget *parent);
     ~GLDisplay();
 
     /**
@@ -118,8 +119,8 @@ public:
     void drawFPS();
 
     //test
-    QGLShaderProgram* getShaderProgram() { return m_shaderProgram; };
-    QGLShaderProgram* getShaderDisplayProgram() { return m_shaderProgramDisplay; };
+    QOpenGLShaderProgram* getShaderProgram() { return m_shaderProgram; };
+    QOpenGLShaderProgram* getShaderDisplayProgram() { return m_shaderProgramDisplay; };
     Scene* getScene() { return m_scene; };
 
 signals:
@@ -207,8 +208,8 @@ private:
     QTimer m_timer;
 
     //Shaders
-    QGLShaderProgram* m_shaderProgram;
-    QGLShaderProgram* m_shaderProgramDisplay;
+    QOpenGLShaderProgram* m_shaderProgram;
+    QOpenGLShaderProgram* m_shaderProgramDisplay;
 
     //Scene
     Scene* m_scene;
@@ -226,6 +227,8 @@ private:
 
     //Editor
     GLSLEditorWindow* shaderEditor;
+
+    void renderText(double x, double y, const QString &str);
 };
 
 #endif // GLDISPLAY_H

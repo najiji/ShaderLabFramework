@@ -29,33 +29,40 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QSize>
+#include <QOpenGLWidget>
+#include <QOpenGLContext>
 
 using namespace std;
 
-GLDisplay::GLDisplay(QWidget *parent) : QGLWidget(QGLFormat(), parent),
+GLDisplay::GLDisplay(QWidget *parent) : QOpenGLWidget(parent),
 m_cameraScene(Camera()), m_cameraQuad(Camera()),
 m_mousePos(0, 0),
 m_lastFPSUpdate(0), m_frameCounter(0), m_FPS(0),
 //m_shaderProgram(), m_shaderProgramDisplay(),
 m_wireframe(false), m_backFaceCulling(false), m_renderCoordinateFrame(false)
 {
-    m_shaderProgram = new QGLShaderProgram(this);
-    m_shaderProgramDisplay = new QGLShaderProgram(this);
+
+    QSurfaceFormat format = QSurfaceFormat();
+    format.setVersion(4,1);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    setFormat(format);
+    m_shaderProgram = new QOpenGLShaderProgram(this);
+    m_shaderProgramDisplay = new QOpenGLShaderProgram(this);
 
     m_timer.start(1000.0 / MAX_FPS);
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(updateOpenGL()));
 }
 
 
-GLDisplay::GLDisplay(const QGLFormat& glFormat, QWidget *parent) : QGLWidget(glFormat, parent),
+GLDisplay::GLDisplay(const QSurfaceFormat& glFormat, QWidget *parent) : QOpenGLWidget(parent),
 m_cameraScene(Camera()), m_cameraQuad(Camera()),
 m_mousePos(0, 0),
 m_timeFPS(QTime()), m_lastFPSUpdate(0), m_frameCounter(0), m_FPS(0),
 // m_shaderProgram(), m_shaderProgramDisplay(),
 m_wireframe(false), m_backFaceCulling(false), m_renderCoordinateFrame(false)
 {
-    m_shaderProgram = new QGLShaderProgram(this);
-    m_shaderProgramDisplay = new QGLShaderProgram(this);
+    m_shaderProgram = new QOpenGLShaderProgram(this);
+    m_shaderProgramDisplay = new QOpenGLShaderProgram(this);
 }
 
 GLDisplay::~GLDisplay()
@@ -79,7 +86,7 @@ void GLDisplay::initializeGL()
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
-    qglClearColor(QColor(Qt::black));
+    glClearColor(0.0,0.0,0.0,0.0);
 
     shaderEditor = new GLSLEditorWindow(m_shaderProgram, m_shaderProgramDisplay, this);
     connect(shaderEditor, SIGNAL(updateLog(QString)), this, SIGNAL(updateLog(QString)));
@@ -510,7 +517,7 @@ void GLDisplay::wheelEvent(QWheelEvent* event)
         m_scene->translateLightSourceZ(0, variation / 1000.0);
     }
 
-    updateGL();
+    update();
     event->accept();
 }
 
@@ -555,7 +562,7 @@ void GLDisplay::mouseMoveEvent(QMouseEvent *event)
     }
 
     //Update openGL
-    updateGL();
+    update();
 
     //Update the position of the mouse
     m_mousePos = QVector2D(event->pos().x(), event->pos().y());
@@ -592,7 +599,7 @@ void GLDisplay::keyPressEvent(QKeyEvent *event)
         qDebug() << "Reset scene" << endl;
     }
 
-    updateGL();//Update openGL
+    update();//Update openGL
     event->accept();
 }
 
@@ -601,7 +608,7 @@ void GLDisplay::updateCameraType(QString cameraType)
 {
     m_cameraScene.changeCameraType(cameraType);
     emit updateProjectionMatrix(m_cameraScene.getProjectionMatrix());
-    updateGL();//Update openGL
+    update();//Update openGL
 }
 
 void GLDisplay::updateCameraFieldOfView(double fieldOfView)
@@ -609,7 +616,7 @@ void GLDisplay::updateCameraFieldOfView(double fieldOfView)
     //Changes the field of view if the camera is a perspective camera
     m_cameraScene.setProjectionMatrix((float)m_framebuffer.getWidth() / (float)m_framebuffer.getHeight(), fieldOfView);
     emit updateProjectionMatrix(m_cameraScene.getProjectionMatrix());
-    updateGL();//Update openGL
+    update();//Update openGL
 }
 
 void GLDisplay::updateObject(QString object)
@@ -640,44 +647,44 @@ void GLDisplay::updateObject(QString object)
     m_scene->removeObjects();
     m_scene->addObject(objectFileName);
     emit(updateMaterialTab());
-    updateGL();//Update openGL
+    update();//Update openGL
 }
 
 void GLDisplay::updateWireframeRendering(bool wireframe)
 {
     m_wireframe = wireframe;
-    updateGL();//Update openGL
+    update();//Update openGL
 }
 
 void GLDisplay::updateBackfaceCulling(bool backface)
 {
     m_backFaceCulling = backface;
-    updateGL();//Update openGL
+    update();//Update openGL
 }
 
 void GLDisplay::updateRenderCoordinateFrame(bool renderCoordFrame)
 {
     m_renderCoordinateFrame = renderCoordFrame;
-    updateGL();
+    update();
 }
 
 void GLDisplay::modelMatrixUpdated(QMatrix4x4 modelMatrix)
 {
     m_scene->setModelMatrix(0, modelMatrix);
-    updateGL();//Update openGL
+    update();//Update openGL
 }
 
 
 void GLDisplay::viewMatrixUpdated(QMatrix4x4 viewMatrix)
 {
     m_cameraScene.setViewMatrix(viewMatrix);
-    updateGL();//Update openGL
+    update();//Update openGL
 }
 
 void GLDisplay::projectionMatrixUpdated(QMatrix4x4 projectionMatrix)
 {
     m_cameraScene.setProjectionMatrix(projectionMatrix);
-    updateGL();//Update openGL
+    update();//Update openGL
 }
 
 void GLDisplay::takeScreenshot()
@@ -750,7 +757,7 @@ void GLDisplay::resetMatrices()
     identity.setToIdentity();
     m_scene->setModelMatrix(0, identity);
     emit updateModelMatrix(identity);
-    updateGL();//Update openGL
+    update();//Update openGL
 }
 
 void GLDisplay::setTexture(QString name, bool isAShaderProgramUniform)
@@ -795,5 +802,17 @@ void GLDisplay::setTexture(QString name, bool isAShaderProgramUniform)
 void GLDisplay::updateOpenGL()
 {
     m_timer.start(1000.0 / MAX_FPS);
-    updateGL();
+    update();
+}
+
+
+void GLDisplay::renderText(double x, double y, const QString &str) {
+    QPainter painter(this);
+    painter.beginNativePainting();
+    glClear(GL_COLOR_BUFFER_BIT);
+    painter.endNativePainting();
+
+    painter.setPen(Qt::black);
+    painter.setFont(QFont());
+    painter.drawText(x, y, width(), height(), Qt::AlignLeft, str);
 }

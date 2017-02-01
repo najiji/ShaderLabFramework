@@ -26,8 +26,9 @@
 #include "qt/Matrix4x4Widget.h"
 #include "qt/GLSLCodeEditor.h"
 #include <QGLShader>
+#include <QOpenGLShader>
 
-GLSLEditorWidget::GLSLEditorWidget(QGLShader* shader, QWidget *parent) : QWidget(parent), ui(new Ui::GLSLEditorWidget)
+GLSLEditorWidget::GLSLEditorWidget(QOpenGLShader* shader, QWidget *parent) : QWidget(parent), ui(new Ui::GLSLEditorWidget)
 {
     m_shader = shader;
     ui->setupUi(this);
@@ -80,7 +81,7 @@ bool GLSLEditorWidget::getLinkToProgram()
     return ui->linkToProgramCheckBox->isChecked();
 }
 
-QGLShader* GLSLEditorWidget::getShader()
+QOpenGLShader* GLSLEditorWidget::getShader()
 {
     return m_shader;
 };

@@ -33,8 +33,10 @@
 #include <QSettings>
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QOpenGLShaderProgram>
+#include <QOpenGLWidget>
 
-GLSLEditorWindow::GLSLEditorWindow(QGLShaderProgram* sProgram, QGLShaderProgram* dsProgram, QWidget *parent) :
+GLSLEditorWindow::GLSLEditorWindow(QOpenGLShaderProgram* sProgram, QOpenGLShaderProgram* dsProgram, QWidget *parent) :
     QMainWindow(parent), ui(new Ui::GLSLEditorWindow)
 {
     ui->setupUi(this);
@@ -65,25 +67,25 @@ GLSLEditorWindow::~GLSLEditorWindow()
 
 void GLSLEditorWindow::setupTabs()
 {
-    QList<QGLShader *> shaders = m_shaderProgram->shaders();
+    QList<QOpenGLShader *> shaders = m_shaderProgram->shaders();
 
     //setup tabs
     for (int i = 0; i < shaders.length(); i++)
     {
         GLSLEditorWidget* sEditor = new GLSLEditorWidget(shaders.at(i), this);
-        if (shaders.at(i)->shaderType() == QGLShader::Vertex)
+        if (shaders.at(i)->shaderType() == QOpenGLShader::Vertex)
         {
             ui->EditorTabWidget->addTab(sEditor, "Vertex Shader");
             sEditor->setLinkToProgram(true);
             sEditor->setObjectName("VertexShader");
         }
-        else if (shaders.at(i)->shaderType() == QGLShader::Geometry)
+        else if (shaders.at(i)->shaderType() == QOpenGLShader::Geometry)
         {
             ui->EditorTabWidget->addTab(sEditor, "Geometry Shader");
             sEditor->setLinkToProgram(false);
             sEditor->setObjectName("GeometryShader");
         }
-        else if (shaders.at(i)->shaderType() == QGLShader::Fragment)
+        else if (shaders.at(i)->shaderType() == QOpenGLShader::Fragment)
         {
             ui->EditorTabWidget->addTab(sEditor, "Fragment Shader");
             sEditor->setLinkToProgram(true);
@@ -96,18 +98,18 @@ void GLSLEditorWindow::setupTabs()
 
     }
 
-    QList<QGLShader *> displayShaders = m_shaderProgramDisplay->shaders();
+    QList<QOpenGLShader *> displayShaders = m_shaderProgramDisplay->shaders();
     //setup additional tabs
     for (int i = 0; i < displayShaders.length(); i++)
     {
         GLSLEditorWidget* dsEditor = new GLSLEditorWidget(displayShaders.at(i), this);
-        if (displayShaders.at(i)->shaderType() == QGLShader::Vertex)
+        if (displayShaders.at(i)->shaderType() == QOpenGLShader::Vertex)
         {
             ui->EditorTabWidget->addTab(dsEditor, "R2T Vertex Shader");
             dsEditor->setLinkToProgram(true);
             dsEditor->setObjectName("R2TVertexShader");
         }
-        else if (displayShaders.at(i)->shaderType() == QGLShader::Fragment)
+        else if (displayShaders.at(i)->shaderType() == QOpenGLShader::Fragment)
         {
             ui->EditorTabWidget->addTab(dsEditor, "R2T Fragment Shader");
             dsEditor->setLinkToProgram(true);
@@ -231,9 +233,9 @@ void main(void)\n\
   fragColor =  frag.color;\n\
 }");
 
-    m_shaderProgram->addShaderFromSourceCode(QGLShader::Vertex, stdVert);
-    m_shaderProgram->addShaderFromSourceCode(QGLShader::Geometry, stdGeom);
-    m_shaderProgram->addShaderFromSourceCode(QGLShader::Fragment, stdFrag);
+    m_shaderProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, stdVert);
+    m_shaderProgram->addShaderFromSourceCode(QOpenGLShader::Geometry, stdGeom);
+    m_shaderProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, stdFrag);
 
     QString texStdVert("#version 400\n\n\
 uniform mat4 mvMatrix;\n\
@@ -266,8 +268,8 @@ void main(void)\n\
   fragColor = texture(textureRendered, varyingTextureCoordinate.st);\n\
 }");
 
-    m_shaderProgramDisplay->addShaderFromSourceCode(QGLShader::Vertex, texStdVert);
-    m_shaderProgramDisplay->addShaderFromSourceCode(QGLShader::Fragment, texStdFrag);
+    m_shaderProgramDisplay->addShaderFromSourceCode(QOpenGLShader::Vertex, texStdVert);
+    m_shaderProgramDisplay->addShaderFromSourceCode(QOpenGLShader::Fragment, texStdFrag);
 
     setupTabs();
     linkShader();
@@ -340,7 +342,7 @@ void GLSLEditorWindow::compileAndLink()
     }
 
     linkShader();
-    static_cast<QGLWidget*>(this->parent())->update();
+    static_cast<QOpenGLWidget*>(this->parent())->update();
 }
 
 /////////////////////////////////////////////////////////////
@@ -592,15 +594,15 @@ bool GLSLEditorWindow::saveAs()
 {
     QStringList filters;
     GLSLEditorWidget* sEdit = static_cast<GLSLEditorWidget*>(ui->EditorTabWidget->currentWidget());
-    if (sEdit->getShader()->shaderType() == QGLShader::Vertex)
+    if (sEdit->getShader()->shaderType() == QOpenGLShader::Vertex)
     {
         filters << "Vertex shader (*.vert)";
     }
-    else if (sEdit->getShader()->shaderType() == QGLShader::Geometry)
+    else if (sEdit->getShader()->shaderType() == QOpenGLShader::Geometry)
     {
         filters << "Geometry shader (*.geom)";
     }
-    else if (sEdit->getShader()->shaderType() == QGLShader::Fragment)
+    else if (sEdit->getShader()->shaderType() == QOpenGLShader::Fragment)
     {
         filters << "Fragment shader (*.frag)";
     }
